@@ -2,71 +2,68 @@ import React from 'react';
 
 
 import './App.css';
-import TodoItem from "./TodoItem";
+import TodoList from "./TodoList";
 
 class App extends React.Component {
+
     constructor() {
-        super()
+        super();
         this.state = {
             todos: [],
             hideCompleted: false
-        }
-        this.handleChange = this.handleChange.bind(this)
-        this.handleHiding = this.handleHiding.bind(this)
+        };
+        this.handleChange = this.handleChange.bind(this);
+       //this.changeCompleted = this.changeCompleted.bind(this);
     }
 
-    addTodoItem(id, text){
-        const it = {
-            id: id,
-            completed: false,
-            text: text
-        };
-
-        this.setState(prevState =>{
-            const copied = prevState.todos.map(item => <TodoItem key={item.id} item={item} handleChange={this.handleChange}/>);
-            copied.push(<TodoItem item={it} />)
-            this.state.todos = copied
-        })
+    changeCompleted = () =>{
+        this.setState({
+            hideCompleted: !this.state.hideCompleted
+        });
     }
 
     handleChange(id) {
+        console.log("inside changing");
         this.setState(prevState => {
             const updatedTodos = prevState.todos.map(todo => {
                 if (todo.id === id) {
-                    todo.completed = !todo.completed
+                    console.log("Found matching",todo.id,id,todo.completed);
+                    todo.completed = !todo.completed;
+                    console.log(todo.completed);
                 }
                 return todo
-            })
+            });
             return {
                 todos: updatedTodos
             }
-        })
+        });
     }
-    handleHiding(){
-       this.setState(prevState =>{
-           // eslint-disable-next-line react/no-direct-mutation-state
-          return prevState.hideCompleted ? this.state.hideCompleted = false : this.state.hideCompleted = true
-       })
-    }
+
+    addToDoItem = () =>{
+        this.setState({todos:
+                this.state.todos.concat({
+                    id: this.state.todos.length,
+                    text: document.getElementById('taskName').value,
+                    completed: false
+                })
+        });
+        document.getElementById("taskName").value = ""
+
+    };
+
 
     render() {
-        const todoItems = this.state.todos.map(item => <TodoItem key={item.id} item={item} handleChange={this.handleChange}/>)
-
         return (
             <div>
                 <header className="App-header">
-                    <input type="checkbox"
-                           checked={this.state.hideCompleted}
-                           onChange={()=>this.handleHiding()}/>
-                    <p>Hide Completed Tasks.</p>
+                    <input type="checkbox" onChange={()=>this.changeCompleted()}/>
+                    <p>Hide Completed Tasks</p>
                 </header>
-                <main className="App-main">
-                    {this.state.todos.length > 0 ? todoItems : <h1>Nothing to do</h1>}
-                </main>
-                <footer className="App-footer">
-                    <input type="text" id="text"/>
-                    <button onClick={() => this.addTodoItem(this.state.todos.length,document.getElementById("text"))} >Add</button>
-                </footer>
+            <TodoList todoItems={this.state.todos} shouldHide={this.state.hideCompleted} handleChange={this.handleChange} />
+            <footer className="App-footer">
+                <input id="taskName" />
+                <button onClick={()=> this.addToDoItem()}>Add</button>
+            </footer>
             </div>
         )
     }
