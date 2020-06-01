@@ -28,10 +28,12 @@ class App extends React.Component {
             const updatedTodos = prevState.todos.map(todo => {
                 if (todo.id === id) {
                     console.log("Found matching",todo.id,id,todo.completed);
-                    todo.completed = !todo.completed;
-                    console.log(todo.completed);
+                    return {
+                        id: todo.id,
+                        text: todo.text,
+                        completed: !todo.completed
+                    };
                 }
-                return todo
             });
             return {
                 todos: updatedTodos
@@ -40,12 +42,13 @@ class App extends React.Component {
     }
 
     addToDoItem = () =>{
+        console.log("inside Add Method");
         this.setState({todos:
-                this.state.todos.concat({
+                this.state.todos.concat([{
                     id: this.state.todos.length,
                     text: document.getElementById('taskName').value,
                     completed: false
-                })
+                }])
         });
         document.getElementById("taskName").value = ""
 

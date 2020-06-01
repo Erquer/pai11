@@ -17,7 +17,7 @@ class TodoItem extends React.Component{
 
 
     render() {
-        console.log(this.props.item.id,this.props.item.completed, this.props.isHidden);
+        console.log(this.props.item.id,this.props.item.text,this.props.item.completed, this.props.isHidden);
         return (
             <div className="TodoItem-item" style={(this.props.isHidden && this.props.item.completed) ? {display:"none"} : {display: "flex"}}>
                 <input
